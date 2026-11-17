@@ -94,10 +94,11 @@ window.ROUTE = [
     options: ["27", "46", "63"],
     correct: 1,
     place: [
-      "Meščanski otroci so imeli šolo ob šutenski cerkvi že v srednjem veku, pred 600 leti.",
-      "Prvo državno šolo je Kamnik dobil leta 1780, torej pred 246 leti.",
-      "Ob prvem vpisu je bilo 79 učencev.",
-      "Danes sta v samem centru 2 osnovni šoli z 11 podružničnimi šolami, še ena pa je na Duplici."
+      "Šutenska cerkev je stara več kot 800 let.",
+      "Bila je večkrat porušena in zopet zgrajena.",
+      "Ob njej je bilo tudi pokopališče.",
+      "V srednjem veku, pred 600 leti, so meščanski otroci ob cerkvi že imeli šolo.",
+      "Prvo državno šolo je Kamnik dobil z uvedbo šolske reforme Marije Terezije, torej pred 246 leti. Ob prvem vpisu je bilo 79 učencev."
     ]
   },
   {

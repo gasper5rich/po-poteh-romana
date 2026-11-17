@@ -1,5 +1,5 @@
 /* Service worker – Po poteh Romana: aplikacija in posnetki delujejo tudi brez povezave */
-const VERSION = "ppr-v17";
+const VERSION = "ppr-v18";
 const CORE = [
   "./",
   "app.css",
@@ -30,6 +30,7 @@ const CORE = [
   "fonts/saira-condensed-latin-ext-800-normal.woff2",
   "fonts/saira-condensed-latin-ext-900-normal.woff2",
   "icons/apple-touch-icon.png",
+  "images/whatsapp-qr.png",
   "icons/icon-192.png",
   "icons/icon-512.png",
   "icons/icon.svg",

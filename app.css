@@ -586,3 +586,11 @@ body.shake .intro-inner{animation:shake .08s linear infinite}
 @media (min-height:760px){.art-ignite .mini-tach{width:200px}.mini-ign{transform:scale(1.15)}.radio-box{transform:scale(1.12)}.ans-list{transform:scale(1.08)}.cam{transform:scale(1.1)}.mb{transform:scale(1.08)}.flag{transform:scale(1.2)}}
 .cam-crew{font-size:23px;gap:1px}
 .ans-q{font:800 italic 14px var(--display);letter-spacing:.06em;text-transform:uppercase;color:var(--mute);margin-bottom:2px}
+
+/* skupina WhatsApp (pravilo 6) */
+.wa-join{display:flex;gap:14px;align-items:center;margin-top:14px;padding:12px;background:#0f0f0f;border:1px solid #2e2e2e;border-left:4px solid var(--orange);border-radius:6px}
+.wa-join img{flex:none;width:118px;height:auto;background:#fff;padding:6px;border-radius:6px}
+.wa-text p{font-size:14.5px!important;line-height:1.4!important;margin:0 0 10px!important}
+.wa-btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:8px 14px;border-radius:3px;background:var(--orange);color:#000;font:900 italic 15px var(--display);letter-spacing:.06em;text-transform:uppercase;text-decoration:none;box-shadow:3px 3px 0 #000}
+.wa-btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 #000}
+.gs.is-active .gs-copy>*:nth-child(5){animation-delay:.28s}
