@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lestvica v živo – Po poteh Romana</title>
+<meta name="theme-color" content="#0E0E0E">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="app.css">
+<style>
+  body{overflow:auto}
+  .tv{min-height:100vh;display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:32px;padding:32px 40px;background:radial-gradient(90% 60% at 30% 0%,#2a1606,var(--ink) 65%)}
+  .tv-head{grid-column:1/-1;display:flex;align-items:flex-end;justify-content:space-between;gap:20px;border-bottom:4px solid var(--orange);padding-bottom:16px}
+  .tv-head h1{margin:0;font:900 italic clamp(44px,6vw,86px)/.85 var(--display);text-transform:uppercase;color:var(--orange);text-shadow:4px 4px 0 #000}
+  .tv-head h1 small{display:block;font-size:.38em;color:var(--chalk);letter-spacing:.14em;text-shadow:none}
+  .tv-live{display:flex;align-items:center;gap:10px;font:800 18px var(--display);letter-spacing:.24em;text-transform:uppercase;color:var(--mute)}
+  .tv-live .live-dot{width:14px;height:14px}
+  .tv-clock{font:900 italic 44px var(--display);color:var(--chalk);font-variant-numeric:tabular-nums}
+
+  .podium{display:grid;grid-template-columns:1fr 1.15fr 1fr;align-items:end;gap:16px;margin:10px 0 26px}
+  .step{display:flex;flex-direction:column;align-items:center;text-align:center;min-width:0}
+  .step .nm{max-width:100%;font:900 italic clamp(20px,2.3vw,34px)/1 var(--display);text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 6px}
+  .step .sc{font:900 italic clamp(34px,4vw,60px)/1 var(--display);color:var(--orange);margin:6px 0}
+  .step .tt{font:800 18px var(--display);color:var(--mute);font-variant-numeric:tabular-nums;margin-bottom:10px}
+  .step .blk{width:100%;display:grid;place-items:center;transform:skewX(var(--skew));border:4px solid #000;box-shadow:6px 6px 0 #000;font:900 italic 64px var(--display)}
+  .step.p1 .blk{height:190px;background:var(--orange);color:#000}
+  .step.p2 .blk{height:140px;background:var(--chalk);color:#000}
+  .step.p3 .blk{height:100px;background:#8a5a2b;color:#fff}
+  .step.empty{opacity:.25}
+  .step .tag{font:800 13px var(--display);letter-spacing:.2em;text-transform:uppercase;color:var(--orange);min-height:18px}
+
+  .tv-list .board-head,.tv-list .board-row{grid-template-columns:52px 1fr 90px 110px}
+  .tv-list .board-row{padding:14px 16px}
+  .tv-list .board-row .pos{width:44px;height:44px;font-size:24px}
+  .tv-list .board-row .who b{font-size:26px}
+  .tv-list .board-row .pts{font-size:38px}
+  .tv-list .board-row .tm{font-size:22px}
+  .tv-list .dots i{width:14px;height:14px}
+
+  .side{display:flex;flex-direction:column;gap:20px}
+  .qr-card{background:var(--asphalt);border-top:4px solid var(--orange);border-radius:6px;padding:22px;text-align:center}
+  .qr-card h2{margin:0 0 4px;font:900 italic 30px var(--display);text-transform:uppercase}
+  .qr-card p{margin:0 0 14px;color:var(--mute)}
+  .qr{background:#fff;padding:12px;border-radius:4px}
+  .qr svg{width:100%;height:auto}
+  .qr-url{margin-top:10px;font:700 13px var(--body);color:var(--chalk);word-break:break-all}
+  .rule-card{background:#0f0f0f;border-left:4px solid var(--orange);padding:16px;border-radius:4px;color:#d9d6d1;font-size:16px;line-height:1.45}
+  .rule-card b{color:var(--orange-hi)}
+  .admin{margin-top:auto;display:flex;gap:10px;flex-wrap:wrap}
+  .admin .ghost-btn{flex:1}
+  .tv-list .row-words{font-size:19px;margin:4px 0 2px}
+  .tv-words{margin-top:26px;padding:22px;background:rgba(15,15,15,.85);border:1px solid var(--steel-2);border-top:4px solid var(--orange);border-radius:6px}
+  .tv-words .help-sub{margin:0 0 14px;font-size:16px}
+  .tv-words .word-chip{padding:8px 16px}
+  .empty-msg{padding:40px;text-align:center;color:var(--mute);font-size:22px;background:var(--asphalt);border-radius:6px}
+  @media (max-width:900px){.tv{grid-template-columns:1fr;padding:20px}.side{order:-1}.qr-card{display:none}}
+</style>
+</head>
+<body>
+<main class="tv">
+  <header class="tv-head">
+    <h1><small>Po poteh</small>Romana</h1>
+    <div>
+      <div class="tv-live"><span class="live-dot" id="dot"></span><span id="status">Povezujem …</span></div>
+      <div class="tv-clock" id="clock">00:00</div>
+    </div>
+  </header>
+
+  <section aria-label="Lestvica">
+    <div class="podium" id="podium"></div>
+    <div class="tv-list">
+      <div class="board-head" aria-hidden="true"><span>#</span><span>Ekipa · etape</span><span>Točke</span><span>Čas</span></div>
+      <ol class="board-list" id="list"></ol>
+      <div class="empty-msg" id="empty" hidden>Na trasi še ni nobene ekipe.<br>Skenirajte QR kodo in zaženite motor!</div>
+    </div>
+    <div class="tv-words" id="tv-words" hidden>
+      <p class="help-sub">Roman v besedah · z Malega gradu</p>
+      <div class="word-cloud" id="tv-cloud"></div>
+    </div>
+  </section>
+
+  <aside class="side">
+    <div class="qr-card">
+      <h2>Pridruži se!</h2>
+      <p>Skeniraj s telefonom in zaženi motor.</p>
+      <div class="qr" id="qr"></div>
+      <div class="qr-url" id="qr-url"></div>
+    </div>
+    <div class="rule-card">
+      Zmaga ekipa z <b>največ točkami</b>.<br>Pri enakem številu točk odloča <b>najkrajši čas vožnje</b>.<br><br>
+      <span style="color:var(--mute)">Vse najboljše za 60, Roman!</span>
+    </div>
+    <div class="admin">
+      <button class="ghost-btn small" id="fs-btn">Celozaslonsko</button>
+      <button class="ghost-btn small" id="clear-btn">Počisti lestvico</button>
+    </div>
+  </aside>
+</main>
+
+<div id="confirm" class="confirm" role="alertdialog" aria-modal="true" aria-labelledby="confirm-text" hidden>
+  <div class="confirm-card">
+    <p id="confirm-text">Res izbrišem vse ekipe z lestvice? Tega ni mogoče razveljaviti. Uporabi pred začetkom zabave, da počistiš poskusne vožnje.</p>
+    <div class="verdict-actions">
+      <button class="ghost-btn small" id="confirm-no">Prekliči</button>
+      <button class="cta" id="confirm-yes">Izbriši vse</button>
+    </div>
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script src="lb.js"></script>
+<script src="vendor/qrcode.js"></script>
+<script>
+(function () {
+  "use strict";
+  const $ = (s) => document.querySelector(s);
+  const TOTAL = 10;
+  const fmt = (ms) => { const t = Math.floor(ms / 1000), h = Math.floor(t / 3600), m = Math.floor((t % 3600) / 60), s = t % 60; return (h ? h + ":" + String(m).padStart(2, "0") : m) + ":" + String(s).padStart(2, "0"); };
+  const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+  // QR koda do igre
+  const gameUrl = new URL("./", location.href).href;
+  $("#qr-url").textContent = gameUrl.replace(/^https?:\/\//, "");
+  try { const q = qrcode(0, "M"); q.addData(gameUrl); q.make(); $("#qr").innerHTML = q.createSvgTag({ cellSize: 6, margin: 0, scalable: true }); } catch (e) {}
+
+  // ura
+  setInterval(() => { const d = new Date(); $("#clock").textContent = d.toLocaleTimeString("sl-SI", { hour: "2-digit", minute: "2-digit" }); }, 1000);
+
+  let teams = [], prev = {};
+  function status(st) {
+    const map = { live: "V živo", poll: "V živo", offline: "Ni povezave – poskušam znova", off: "Lestvica ni povezana – izpolni config.js" };
+    $("#status").textContent = map[st] || "V živo";
+    $("#dot").classList.toggle("on", st === "live" || st === "poll");
+  }
+  function render() {
+    const list = LB.rank(teams);
+    $("#empty").hidden = list.length > 0;
+    // stopničke 2-1-3
+    $("#podium").innerHTML = [1, 0, 2].map((i) => {
+      const t = list[i];
+      if (!t) return `<div class="step p${i + 1} empty"><span class="tag"></span><span class="nm">—</span><span class="sc">&nbsp;</span><span class="tt">&nbsp;</span><div class="blk">${i + 1}</div></div>`;
+      const tag = t.finishedAt ? "na cilju" : "etapa " + Math.min((t.answered || 0) + 1, t.total || TOTAL) + "/" + (t.total || TOTAL);
+      return `<div class="step p${i + 1}"><span class="tag">${tag}</span><span class="nm">${esc(t.name)}</span><span class="sc">${t.score || 0}</span><span class="tt">${fmt(t.time)}</span><div class="blk">${i + 1}</div></div>`;
+    }).join("");
+    // oblak besed
+    const words = LB.cloud(teams), cl = $("#tv-cloud");
+    $("#tv-words").hidden = words.length === 0;
+    const sig = words.map((w) => w.key + w.count).join("|");
+    if (cl.dataset.sig !== sig) {
+      cl.dataset.sig = sig; cl.innerHTML = "";
+      words.forEach((w) => {
+        const el = document.createElement("span");
+        el.className = "word-chip" + (w.count > 1 ? " mine" : "");
+        el.style.fontSize = Math.min(22 + (w.count - 1) * 8, 56) + "px";
+        el.textContent = w.word + (w.count > 1 ? " ×" + w.count : "");
+        cl.appendChild(el);
+      });
+    }
+    const ol = $("#list"); ol.innerHTML = "";
+    list.forEach((t, i) => {
+      const done = !!t.finishedAt, prog = String(t.progress || "").padEnd(t.total || TOTAL, "-");
+      const li = document.createElement("li");
+      li.className = "board-row" + (done ? " done" : "");
+      li.innerHTML = `<span class="pos">${i + 1}</span><div class="who"><b>${esc(t.name)}</b>${t.words ? `<span class="row-words">»${esc(t.words)}«</span>` : ""}<span class="dots">${[...prog].map((c) => `<i class="${c === "1" ? "y" : c === "0" ? "n" : ""}"></i>`).join("")}</span></div><span class="pts">${t.score || 0}</span><span class="tm">${fmt(t.time)}<small>${done ? "cilj" : "etapa " + Math.min((t.answered || 0) + 1, t.total || TOTAL)}</small></span>`;
+      const sig = (t.score || 0) + "/" + (t.answered || 0);
+      if (prev[t.id] && prev[t.id] !== sig) li.classList.add("flash");
+      prev[t.id] = sig;
+      ol.appendChild(li);
+    });
+  }
+  if (!LB.enabled) { status("off"); render(); }
+  else LB.subscribe((t) => { teams = t; render(); }, status);
+  setInterval(() => { if (teams.length) render(); }, 1000);
+
+  // celozaslonsko
+  $("#fs-btn").addEventListener("click", () => { const el = document.documentElement; (document.fullscreenElement ? document.exitFullscreen() : el.requestFullscreen && el.requestFullscreen()).catch?.(() => {}); });
+
+  // počisti (organizator)
+  $("#clear-btn").addEventListener("click", () => { $("#confirm").hidden = false; $("#confirm-no").focus(); });
+  $("#confirm-no").addEventListener("click", () => { $("#confirm").hidden = true; });
+  $("#confirm-yes").addEventListener("click", async () => {
+    $("#confirm").hidden = true;
+    await Promise.all(teams.map((t) => LB.remove(t.id).catch(() => {})));
+    try { localStorage.removeItem("ppr-lb-pending"); } catch (e) {}
+  });
+})();
+</script>
+</body>
+</html>

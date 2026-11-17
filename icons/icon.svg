@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<rect width="512" height="512" fill="#111"/>
+<polygon points="0,330 512,150 512,250 0,430" fill="#FF6600"/>
+<polygon points="0,440 512,260 512,280 0,460" fill="#FF6600" opacity=".55"/>
+<text x="256" y="318" text-anchor="middle" font-family="DejaVu Sans" font-weight="bold" font-style="oblique" font-size="230" fill="#fff" letter-spacing="-8">60</text>
+<text x="256" y="120" text-anchor="middle" font-family="DejaVu Sans" font-weight="bold" font-size="46" fill="#FF6600" letter-spacing="6">ROMAN</text>
+</svg>
