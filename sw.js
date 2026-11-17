@@ -1,5 +1,5 @@
 /* Service worker – Po poteh Romana: aplikacija in posnetki delujejo tudi brez povezave */
-const VERSION = "ppr-v18";
+const VERSION = "ppr-v19";
 const CORE = [
   "./",
   "app.css",
